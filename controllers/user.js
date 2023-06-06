@@ -14,3 +14,14 @@ exports.follow = async (req, res, next) => {
       next(error);
     }
   };
+
+exports.unfollow = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ where: { id: req.user.id } });
+    user.removeFollowing(parseInt(req.params.id));
+    res.send('성공')
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+}

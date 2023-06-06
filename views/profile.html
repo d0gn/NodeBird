@@ -6,7 +6,10 @@
       <h2>팔로잉 목록</h2>
       {% if user.Followings %}
         {% for following in user.Followings %}
-          <div>{{following.nick}}</div>
+        <div>
+          {{ following.nick }}
+          <button class="unfollow-btn" data-user-id="{{ following.id }}">언팔</button>
+        </div>
         {% endfor %}
       {% endif %}
     </div>
@@ -19,4 +22,23 @@
       {% endif %}
     </div>
   </div>
+{% endblock %}
+
+{% block script %}
+  <script>
+    document.querySelectorAll('.unfollow-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const userId = btn.dataset.userId;
+        if (confirm('팔로잉을 삭제하시겠습니까?')) {
+          axios.post(`/user/${userId}/unfollow`)
+            .then(() => {
+              location.reload();
+            })
+            .catch((err) => {
+              console.error(err);
+            });
+        }
+      });
+    });
+  </script>
 {% endblock %}
